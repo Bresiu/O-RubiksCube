@@ -19,26 +19,54 @@ class Face {
 private:
     int faceType;
     int fields[9];
+    void shiftWithMemory(int *array, int to, int &memo) {
+        int tmp = array[to];
+        array[to] = memo;
+        memo = tmp;
+    }
+
 public:
     Face(int faceType) {
         Face::faceType = faceType;
         fill_n(fields, 9, faceType);
     }
+    void rotate() {
+        int memo = fields[0];
+        shiftWithMemory(fields, 2, memo);
+        shiftWithMemory(fields, 8, memo);
+        shiftWithMemory(fields, 6, memo);
+        shiftWithMemory(fields, 0, memo);
+        memo = fields[1];
+        shiftWithMemory(fields, 5, memo);
+        shiftWithMemory(fields, 7, memo);
+        shiftWithMemory(fields, 3, memo);
+        shiftWithMemory(fields, 1, memo);
+    }
+    void print() {
+        for (int i : fields) {
+            cout << i;
+        }
+        cout << endl;
+    }
+    void printNum() {
+        cout << "face type: " << faceType << endl;
+    }
 };
 
 class Cube {
+private:
     map<char, Face> faces = {
-        pair<char, Face> ('F', Face(6)),
-        pair<char, Face> ('B', Face(5)),
-        pair<char, Face> ('R', Face(4)),
-        pair<char, Face> ('L', Face(3)),
-        pair<char, Face> ('U', Face(2)),
-        pair<char, Face> ('D', Face(1))
+        {'F', Face(6)},
+        {'B', Face(5)},
+        {'R', Face(4)},
+        {'L', Face(3)},
+        {'U', Face(2)},
+        {'D', Face(1)}
     };
 public: void doMove(char move, int moveValue) {
+    faces.at(move).rotate();
     switch (move) {
         case 'F':
-            
             break;
         case 'B':
             
@@ -61,7 +89,7 @@ public: void doMove(char move, int moveValue) {
         cout << move << " by: " << moveValue << endl;
     }
     
-public: string toString() {
+string toString() {
         return "";
     }
 };
@@ -109,7 +137,8 @@ string computeFaceColors(string faceMovesChain) {
 }
 
 int main(int argc, const char * argv[]) {
-    computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'");
+    computeFaceColors("B");
+    //computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'");
     //assert(computeFaceColors("RL'") == "2 1 2 1 2 2");
 //    assert(computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'") == "4 4 5 4 4 4");
 //    assert(computeFaceColors("R2L2U2D2F2B2") == "2 2 2 2 2 2");
