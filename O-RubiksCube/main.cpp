@@ -15,6 +15,13 @@
 
 using namespace std;
 
+const char FRONT = 'F';
+const char RIGHT = 'R';
+const char BACK = 'B';
+const char LEFT = 'L';
+const char UP = 'U';
+const char DOWN = 'D';
+
 const int RED = 1;
 const int GREEN = 2;
 const int ORANGE = 3;
@@ -22,39 +29,49 @@ const int BLUE = 4;
 const int YELLOW = 5;
 const int WHITE = 6;
 
+const int SIDE_INDEXES_SIZE = 3;
+
 class Face {
 private:
     int faceStartColor;
-    int fields[9] = {1,2,3,4,5,6,7,8,9}; // todo: fill with faceStartColor
+    int fields[9];
     
-    void shiftWithMemory(int *array, int to, int &memo) {
-        int tmp = array[to];
-        array[to] = memo;
+    void shiftWithMemory(int to, int &memo) {
+        int tmp = fields[to];
+        fields[to] = memo;
         memo = tmp;
     }
 
 public:
     Face(int faceStartColor) {
         Face::faceStartColor = faceStartColor; // also fields[4] as middle block will never change
-        //fill_n(fields, 9, faceStartColor);
+        fill_n(fields, 9, faceStartColor);
     }
     
     void rotate() {
         int memo;
-        shiftWithMemory(fields, 0, memo);
-        shiftWithMemory(fields, 2, memo);
-        shiftWithMemory(fields, 8, memo);
-        shiftWithMemory(fields, 6, memo);
-        shiftWithMemory(fields, 0, memo);
-        shiftWithMemory(fields, 1, memo);
-        shiftWithMemory(fields, 5, memo);
-        shiftWithMemory(fields, 7, memo);
-        shiftWithMemory(fields, 3, memo);
-        shiftWithMemory(fields, 1, memo);
+        shiftWithMemory(0, memo);
+        shiftWithMemory(2, memo);
+        shiftWithMemory(8, memo);
+        shiftWithMemory(6, memo);
+        shiftWithMemory(0, memo);
+        shiftWithMemory(1, memo);
+        shiftWithMemory(5, memo);
+        shiftWithMemory(7, memo);
+        shiftWithMemory(3, memo);
+        shiftWithMemory(1, memo);
     }
     
-    void pushOutAndGetInSide() {
-        
+    void pushOutAndGetInSide(int (&indexes)[SIDE_INDEXES_SIZE], int (&memo)[SIDE_INDEXES_SIZE]) {
+        int tmp[SIDE_INDEXES_SIZE];
+        // cout << "before: " << memo[0] << " " << memo[1] << " " << memo[2] << endl;
+        for (int i = 0; i < SIDE_INDEXES_SIZE; ++i) {
+            int index = indexes[i];
+            tmp[i] = fields[index];
+            fields[index] = memo[i];
+            memo[i] = tmp[i];
+        }
+        // cout << "after: " << memo[0] << " " << memo[1] << " " << memo[2] << endl;
     }
     
     void print() {
@@ -72,36 +89,67 @@ public:
 class Cube {
 
     map<char, Face> faces = {
-        {'F', Face(RED)},
-        {'R', Face(GREEN)},
-        {'B', Face(ORANGE)},
-        {'L', Face(BLUE)},
-        {'U', Face(YELLOW)},
-        {'D', Face(WHITE)}
+        {FRONT, Face(RED)},
+        {RIGHT, Face(GREEN)},
+        {BACK, Face(ORANGE)},
+        {LEFT, Face(BLUE)},
+        {UP, Face(YELLOW)},
+        {DOWN, Face(WHITE)}
     };
+    
+    void doFrontMovement() {
+        int memo[SIDE_INDEXES_SIZE];
+        int rightIndexes[SIDE_INDEXES_SIZE] = {0, 3, 6};
+        faces.at(RIGHT).pushOutAndGetInSide(rightIndexes, memo);
+        int downLeftIndexes[SIDE_INDEXES_SIZE] = {8, 5, 2};
+        faces.at(DOWN).pushOutAndGetInSide(downLeftIndexes, memo);
+        faces.at(LEFT).pushOutAndGetInSide(downLeftIndexes, memo);
+        int upIndexes[SIDE_INDEXES_SIZE] = {2, 5, 8};
+        faces.at(UP).pushOutAndGetInSide(upIndexes, memo);
+        faces.at(RIGHT).pushOutAndGetInSide(rightIndexes, memo);
+    }
+    
+    void doRightMovement() {
+        
+    }
+    
+    void doBackMovement() {
+        
+    }
+    
+    void doLeftMovement() {
+        
+    }
+    
+    void doUpMovement() {
+        
+    }
+    
+    void doDownMovement() {
+        
+    }
     
 public: void doMove(char move, int moveValue) {
     faces.at(move).rotate();
     faces.at(move).print();
     switch (move) {
-        case 'F': // Front Red 1
+        case FRONT:
+            doFrontMovement();
             break;
-        case 'B': // Back Blue 2
-            
+        case RIGHT:
+            doRightMovement();
             break;
-        case 'R': // Right
-            
+        case BACK:
+            doBackMovement();
             break;
-        case 'L':
-            
+        case LEFT:
+            doLeftMovement();
             break;
-        case 'U':
-            
+        case UP:
+            doUpMovement();
             break;
-        case 'D':
-            
-            break;
-        default:
+        case DOWN:
+            doDownMovement();
             break;
     }
         cout << move << " by: " << moveValue << endl;
