@@ -15,10 +15,18 @@
 
 using namespace std;
 
+const int RED = 1;
+const int GREEN = 2;
+const int ORANGE = 3;
+const int BLUE = 4;
+const int YELLOW = 5;
+const int WHITE = 6;
+
 class Face {
 private:
-    int faceType;
-    int fields[9];
+    int faceStartColor;
+    int fields[9] = {1,2,3,4,5,6,7,8,9}; // todo: fill with faceStartColor
+    
     void shiftWithMemory(int *array, int to, int &memo) {
         int tmp = array[to];
         array[to] = memo;
@@ -26,52 +34,62 @@ private:
     }
 
 public:
-    Face(int faceType) {
-        Face::faceType = faceType;
-        fill_n(fields, 9, faceType);
+    Face(int faceStartColor) {
+        Face::faceStartColor = faceStartColor; // also fields[4] as middle block will never change
+        //fill_n(fields, 9, faceStartColor);
     }
+    
     void rotate() {
-        int memo = fields[0];
+        int memo;
+        shiftWithMemory(fields, 0, memo);
         shiftWithMemory(fields, 2, memo);
         shiftWithMemory(fields, 8, memo);
         shiftWithMemory(fields, 6, memo);
         shiftWithMemory(fields, 0, memo);
-        memo = fields[1];
+        shiftWithMemory(fields, 1, memo);
         shiftWithMemory(fields, 5, memo);
         shiftWithMemory(fields, 7, memo);
         shiftWithMemory(fields, 3, memo);
         shiftWithMemory(fields, 1, memo);
     }
+    
+    void pushOutAndGetInSide() {
+        
+    }
+    
     void print() {
         for (int i : fields) {
-            cout << i;
+            cout << i << endl;
         }
         cout << endl;
     }
+    
     void printNum() {
-        cout << "face type: " << faceType << endl;
+        cout << "face type: " << faceStartColor << endl;
     }
 };
 
 class Cube {
-private:
+
     map<char, Face> faces = {
-        {'F', Face(6)},
-        {'B', Face(5)},
-        {'R', Face(4)},
-        {'L', Face(3)},
-        {'U', Face(2)},
-        {'D', Face(1)}
+        {'F', Face(RED)},
+        {'R', Face(GREEN)},
+        {'B', Face(ORANGE)},
+        {'L', Face(BLUE)},
+        {'U', Face(YELLOW)},
+        {'D', Face(WHITE)}
     };
+    
 public: void doMove(char move, int moveValue) {
     faces.at(move).rotate();
+    faces.at(move).print();
     switch (move) {
-        case 'F':
+        case 'F': // Front Red 1
             break;
-        case 'B':
+        case 'B': // Back Blue 2
             
             break;
-        case 'R':
+        case 'R': // Right
             
             break;
         case 'L':
@@ -93,6 +111,16 @@ string toString() {
         return "";
     }
 };
+
+void print(const vector<string>& vector){
+    for (unsigned i = 0; i< vector.size(); ++i) {
+        cout << vector[i] << endl;
+    }
+}
+
+void doMove(char move, int moveValue, Cube cube) {
+    cube.doMove(move, moveValue);
+}
 
 pair<char, int> parseMoveValue(string move) {
     if (move.length() == 1) {
@@ -117,16 +145,6 @@ vector<pair<char, int>> parseMovesChain(string faceMovesChain) {
     return moves;
 }
 
-void print(const vector<string>& vector){
-    for (unsigned i = 0; i< vector.size(); ++i) {
-        cout << vector[i] << endl;
-    }
-}
-
-void doMove(char move, int moveValue, Cube cube) {
-    cube.doMove(move, moveValue);
-}
-
 string computeFaceColors(string faceMovesChain) {
     vector<pair<char, int>> moves = parseMovesChain(faceMovesChain);
     Cube cube;
@@ -137,7 +155,7 @@ string computeFaceColors(string faceMovesChain) {
 }
 
 int main(int argc, const char * argv[]) {
-    computeFaceColors("B");
+    computeFaceColors("F");
     //computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'");
     //assert(computeFaceColors("RL'") == "2 1 2 1 2 2");
 //    assert(computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'") == "4 4 5 4 4 4");
