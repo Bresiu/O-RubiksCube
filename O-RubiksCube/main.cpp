@@ -62,16 +62,14 @@ public:
         shiftWithMemory(1, memo);
     }
     
-    void rt1(int (&indexes)[SIDE_INDEXES_SIZE], int (&memo)[SIDE_INDEXES_SIZE]) {
+    void pushOutAndGetInSide(int (&indexes)[SIDE_INDEXES_SIZE], int (&memo)[SIDE_INDEXES_SIZE]) {
         int tmp[SIDE_INDEXES_SIZE];
-        // cout << "before: " << memo[0] << " " << memo[1] << " " << memo[2] << endl;
         for (int i = 0; i < SIDE_INDEXES_SIZE; ++i) {
             int index = indexes[i];
             tmp[i] = fields[index];
             fields[index] = memo[i];
             memo[i] = tmp[i];
         }
-        // cout << "after: " << memo[0] << " " << memo[1] << " " << memo[2] << endl;
     }
     
     void print() {
@@ -107,7 +105,6 @@ private:
         int upIndexes[SIDE_INDEXES_SIZE] = {2, 5, 8};
         faces.at(UP).pushOutAndGetInSide(upIndexes, memo);
         faces.at(RIGHT).pushOutAndGetInSide(rightIndexes, memo);
-        faces.at(FRONT).print();
     }
     
     void doRightMovement() {
@@ -141,15 +138,13 @@ private:
     
 public: void doMove(char move, int moveValue) {
     faces.at(move).rotate();
-    cout << "rotate: " << move << endl;
+    cout << "rotate: " << move << " by " << moveValue <<endl;
     switch (move) {
         case FRONT:
             doFrontMovement();
-            cout << "doFrontMovement: " << endl;
             break;
         case RIGHT:
             doRightMovement();
-            cout << "doRightMovement" << endl;
             break;
         case BACK:
             doBackMovement();
@@ -164,8 +159,7 @@ public: void doMove(char move, int moveValue) {
             doDownMovement();
             break;
     }
-    cout << move << " by: " << moveValue << endl;
-    }
+}
     
 string toString() {
         return "";
@@ -186,7 +180,7 @@ void print(const vector<string>& vector){
     }
 }
 
-void doMove(char move, int moveValue, Cube cube) {
+void doMove(char move, int moveValue, Cube& cube) {
     cube.doMove(move, moveValue);
 }
 
