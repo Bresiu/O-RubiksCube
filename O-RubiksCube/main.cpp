@@ -62,7 +62,7 @@ public:
         shiftWithMemory(1, memo);
     }
     
-    void pushOutAndGetInSide(int (&indexes)[SIDE_INDEXES_SIZE], int (&memo)[SIDE_INDEXES_SIZE]) {
+    void rt1(int (&indexes)[SIDE_INDEXES_SIZE], int (&memo)[SIDE_INDEXES_SIZE]) {
         int tmp[SIDE_INDEXES_SIZE];
         // cout << "before: " << memo[0] << " " << memo[1] << " " << memo[2] << endl;
         for (int i = 0; i < SIDE_INDEXES_SIZE; ++i) {
@@ -76,7 +76,7 @@ public:
     
     void print() {
         for (int i : fields) {
-            cout << i << endl;
+            cout << i << " ";
         }
         cout << endl;
     }
@@ -87,7 +87,7 @@ public:
 };
 
 class Cube {
-
+private:
     map<char, Face> faces = {
         {FRONT, Face(RED)},
         {RIGHT, Face(GREEN)},
@@ -107,10 +107,20 @@ class Cube {
         int upIndexes[SIDE_INDEXES_SIZE] = {2, 5, 8};
         faces.at(UP).pushOutAndGetInSide(upIndexes, memo);
         faces.at(RIGHT).pushOutAndGetInSide(rightIndexes, memo);
+        faces.at(FRONT).print();
     }
     
     void doRightMovement() {
-        
+        int memo[SIDE_INDEXES_SIZE];
+        int frontIndexes[SIDE_INDEXES_SIZE] = {8, 5, 2};
+        faces.at(FRONT).pushOutAndGetInSide(frontIndexes, memo);
+        int upIndexes[SIDE_INDEXES_SIZE] = {2, 1, 0};
+        faces.at(UP).pushOutAndGetInSide(upIndexes, memo);
+        int backIndexes[SIDE_INDEXES_SIZE] = {0, 3, 6};
+        faces.at(BACK).pushOutAndGetInSide(backIndexes, memo);
+        int downIndexes[SIDE_INDEXES_SIZE] = {6, 7, 8};
+        faces.at(DOWN).pushOutAndGetInSide(downIndexes, memo);
+        faces.at(FRONT).pushOutAndGetInSide(frontIndexes, memo);
     }
     
     void doBackMovement() {
@@ -131,13 +141,15 @@ class Cube {
     
 public: void doMove(char move, int moveValue) {
     faces.at(move).rotate();
-    faces.at(move).print();
+    cout << "rotate: " << move << endl;
     switch (move) {
         case FRONT:
             doFrontMovement();
+            cout << "doFrontMovement: " << endl;
             break;
         case RIGHT:
             doRightMovement();
+            cout << "doRightMovement" << endl;
             break;
         case BACK:
             doBackMovement();
@@ -152,11 +164,19 @@ public: void doMove(char move, int moveValue) {
             doDownMovement();
             break;
     }
-        cout << move << " by: " << moveValue << endl;
+    cout << move << " by: " << moveValue << endl;
     }
     
 string toString() {
         return "";
+    }
+    void print() {
+        faces.at(FRONT).print();
+        faces.at(RIGHT).print();
+        faces.at(BACK).print();
+        faces.at(LEFT).print();
+        faces.at(UP).print();
+        faces.at(DOWN).print();
     }
 };
 
@@ -199,11 +219,12 @@ string computeFaceColors(string faceMovesChain) {
     for (pair<char, int> move : moves) {
         doMove(move.first, move.second, cube);
     }
+    cube.print();
     return cube.toString();
 }
 
 int main(int argc, const char * argv[]) {
-    computeFaceColors("F");
+    computeFaceColors("FR");
     //computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'");
     //assert(computeFaceColors("RL'") == "2 1 2 1 2 2");
 //    assert(computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'") == "4 4 5 4 4 4");
