@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <algorithm>
 #include <map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -30,11 +31,12 @@ const int YELLOW = 5;
 const int WHITE = 6;
 
 const int SIDE_INDEXES_SIZE = 3;
+const int FIELDS_SIZE = 9;
 
 class Face {
 private:
     int faceStartColor;
-    int fields[9];
+    int fields[FIELDS_SIZE];
     
     void shiftWithMemory(int to, int &memo) {
         int tmp = fields[to];
@@ -45,7 +47,7 @@ private:
 public:
     Face(int faceStartColor) {
         Face::faceStartColor = faceStartColor; // also fields[4] as middle block will never change
-        fill_n(fields, 9, faceStartColor);
+        fill_n(fields, FIELDS_SIZE, faceStartColor);
     }
     
     void rotate() {
@@ -77,6 +79,14 @@ public:
             cout << i << " ";
         }
         cout << endl;
+    }
+    
+    void printVariety() {
+        unordered_set<int> values;
+        for (int i = 0; i < FIELDS_SIZE; ++i) {
+            values.insert(fields[i]);
+        }
+        cout << "print variety: " << values.size() << endl;
     }
     
     void printNum() {
