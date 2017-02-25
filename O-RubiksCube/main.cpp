@@ -142,7 +142,16 @@ private:
     }
     
     void doLeftMovement() {
-        
+        int memo[SIDE_INDEXES_SIZE];
+        int upIndexes[SIDE_INDEXES_SIZE] = {6, 7, 8};
+        faces.at(UP).pushOutAndGetInSide(upIndexes, memo);
+        int frontIndexes[SIDE_INDEXES_SIZE] = {0, 3, 6};
+        faces.at(FRONT).pushOutAndGetInSide(frontIndexes, memo);
+        int downIndexes[SIDE_INDEXES_SIZE] = {2, 1, 0};
+        faces.at(DOWN).pushOutAndGetInSide(downIndexes, memo);
+        int backIndexes[SIDE_INDEXES_SIZE] = {8, 5, 2};
+        faces.at(BACK).pushOutAndGetInSide(backIndexes, memo);
+        faces.at(UP).pushOutAndGetInSide(upIndexes, memo);
     }
     
     void doUpMovement() {
