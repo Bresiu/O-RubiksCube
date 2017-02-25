@@ -161,10 +161,17 @@ private:
         faces.at(FRONT).pushOutAndGetInSide(rightFrontLeftBackIndexes, memo);
         faces.at(LEFT).pushOutAndGetInSide(rightFrontLeftBackIndexes, memo);
         faces.at(BACK).pushOutAndGetInSide(rightFrontLeftBackIndexes, memo);
+        faces.at(RIGHT).pushOutAndGetInSide(rightFrontLeftBackIndexes, memo);
     }
     
     void doDownMovement() {
-        
+        int memo[SIDE_INDEXES_SIZE];
+        int leftFrontRightBackIndexes[SIDE_INDEXES_SIZE] = {6, 7, 8};
+        faces.at(LEFT).pushOutAndGetInSide(leftFrontRightBackIndexes, memo);
+        faces.at(FRONT).pushOutAndGetInSide(leftFrontRightBackIndexes, memo);
+        faces.at(RIGHT).pushOutAndGetInSide(leftFrontRightBackIndexes, memo);
+        faces.at(BACK).pushOutAndGetInSide(leftFrontRightBackIndexes, memo);
+        faces.at(LEFT).pushOutAndGetInSide(leftFrontRightBackIndexes, memo);
     }
     
 public: void doMove(char move, int moveValue) {
@@ -249,7 +256,7 @@ string computeFaceColors(string faceMovesChain) {
 }
 
 int main(int argc, const char * argv[]) {
-    computeFaceColors("FRB");
+    computeFaceColors("FRBLUD");
     //computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'");
     //assert(computeFaceColors("RL'") == "2 1 2 1 2 2");
 //    assert(computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'") == "4 4 5 4 4 4");
