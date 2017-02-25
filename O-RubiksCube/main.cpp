@@ -155,7 +155,12 @@ private:
     }
     
     void doUpMovement() {
-        
+        int memo[SIDE_INDEXES_SIZE];
+        int rightFrontLeftBackIndexes[SIDE_INDEXES_SIZE] = {2, 1, 0};
+        faces.at(RIGHT).pushOutAndGetInSide(rightFrontLeftBackIndexes, memo);
+        faces.at(FRONT).pushOutAndGetInSide(rightFrontLeftBackIndexes, memo);
+        faces.at(LEFT).pushOutAndGetInSide(rightFrontLeftBackIndexes, memo);
+        faces.at(BACK).pushOutAndGetInSide(rightFrontLeftBackIndexes, memo);
     }
     
     void doDownMovement() {
