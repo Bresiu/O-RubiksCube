@@ -131,7 +131,14 @@ private:
     }
     
     void doBackMovement() {
-        
+        int memo[SIDE_INDEXES_SIZE];
+        int upLeftDownIndexes[SIDE_INDEXES_SIZE] = {0, 3, 6};
+        faces.at(UP).pushOutAndGetInSide(upLeftDownIndexes, memo);
+        faces.at(LEFT).pushOutAndGetInSide(upLeftDownIndexes, memo);
+        faces.at(DOWN).pushOutAndGetInSide(upLeftDownIndexes, memo);
+        int rightIndexes[SIDE_INDEXES_SIZE] = {8, 5, 2};
+        faces.at(RIGHT).pushOutAndGetInSide(rightIndexes, memo);
+        faces.at(UP).pushOutAndGetInSide(upLeftDownIndexes, memo);
     }
     
     void doLeftMovement() {
@@ -228,7 +235,7 @@ string computeFaceColors(string faceMovesChain) {
 }
 
 int main(int argc, const char * argv[]) {
-    computeFaceColors("FR");
+    computeFaceColors("FRB");
     //computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'");
     //assert(computeFaceColors("RL'") == "2 1 2 1 2 2");
 //    assert(computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'") == "4 4 5 4 4 4");
