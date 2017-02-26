@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <map>
 #include <unordered_set>
+#include <sstream>
 
 using namespace std;
 
@@ -81,12 +82,12 @@ public:
         cout << endl;
     }
     
-    void printVariety() {
+long printVariety() {
         unordered_set<int> values;
         for (int i = 0; i < FIELDS_SIZE; ++i) {
             values.insert(fields[i]);
         }
-        cout << "print variety: " << values.size() << endl;
+        return values.size();
     }
     
     void printNum() {
@@ -105,7 +106,7 @@ private:
         {DOWN, Face(WHITE)}
     };
     
-    void doFrontMovement() {
+void doFrontMovement() {
         int memo[SIDE_INDEXES_SIZE];
         int rightIndexes[SIDE_INDEXES_SIZE] = {0, 3, 6};
         faces.at(RIGHT).pushOutAndGetInSide(rightIndexes, memo);
@@ -175,33 +176,43 @@ private:
     }
     
 public: void doMove(char move, int moveValue) {
-    faces.at(move).rotate();
-    cout << "rotate: " << move << " by " << moveValue <<endl;
-    switch (move) {
-        case FRONT:
-            doFrontMovement();
-            break;
-        case RIGHT:
-            doRightMovement();
-            break;
-        case BACK:
-            doBackMovement();
-            break;
-        case LEFT:
-            doLeftMovement();
-            break;
-        case UP:
-            doUpMovement();
-            break;
-        case DOWN:
-            doDownMovement();
-            break;
+    cout << "move: " << move << " moveValue: " << moveValue << endl;
+    for (int i = 0; i < moveValue; ++i) {
+        faces.at(move).rotate();
+        switch (move) {
+            case FRONT:
+                doFrontMovement();
+                break;
+            case RIGHT:
+                doRightMovement();
+                break;
+            case BACK:
+                doBackMovement();
+                break;
+            case LEFT:
+                doLeftMovement();
+                break;
+            case UP:
+                doUpMovement();
+                break;
+            case DOWN:
+                doDownMovement();
+                break;
+        }
     }
 }
     
 string toString() {
-        return "";
-    }
+    stringstream strstream;
+    strstream <<
+    faces.at(FRONT).printVariety() << " " <<
+    faces.at(RIGHT).printVariety() << " " <<
+    faces.at(BACK).printVariety() << " " <<
+    faces.at(LEFT).printVariety() << " " <<
+    faces.at(UP).printVariety() << " " <<
+    faces.at(DOWN).printVariety();
+    return strstream.str();
+}
     void print() {
         faces.at(FRONT).print();
         faces.at(RIGHT).print();
@@ -251,17 +262,17 @@ string computeFaceColors(string faceMovesChain) {
     for (pair<char, int> move : moves) {
         doMove(move.first, move.second, cube);
     }
-    cube.print();
     return cube.toString();
 }
 
 int main(int argc, const char * argv[]) {
-    computeFaceColors("FRBLUD");
-    //computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'");
-    //assert(computeFaceColors("RL'") == "2 1 2 1 2 2");
-//    assert(computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'") == "4 4 5 4 4 4");
-//    assert(computeFaceColors("R2L2U2D2F2B2") == "2 2 2 2 2 2");
-//    assert(computeFaceColors("RRRRLLLLUUUUDDDDFFFFBBBB") == "1 1 1 1 1 1");
-//    assert(computeFaceColors("URU2R'F'F'U'R2URFUF2U'R'") == "3 5 5 3 2 3");
+//    computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'");
+//    computeFaceColors("RL'");
+    // assert(computeFaceColors("RL'") == "2 1 2 1 2 2");
+    // assert(computeFaceColors("BRL'D'R2DLR'B'R2UB2U'DR2D2'BRL2'D'R2DLR'B'R2UB2U'DR2D2'") == "4 4 5 4 4 4");
+    // assert(computeFaceColors("R2L2U2D2F2B2") == "2 2 2 2 2 2");
+    // assert(computeFaceColors("RRRRLLLLUUUUDDDDFFFFBBBB") == "1 1 1 1 1 1");
+    cout << computeFaceColors("URU2R'F'F'U'R2URFUF2U'R'") << endl;
+    assert(computeFaceColors("URU2R'F'F'U'R2URFUF2U'R'") == "3 5 5 3 2 3");
     return 0;
 }
